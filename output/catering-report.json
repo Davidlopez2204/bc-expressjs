@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-08-03T02:59:07.439Z",
+  "appliedFilter": null,
+  "summary": {
+    "totalPackages": 5,
+    "activePackages": 5,
+    "inactivePackages": 0,
+    "averagePricePerPerson": 48.2,
+    "mostExpensivePackage": {
+      "id": "cat-005",
+      "name": "Cena de Gala a 5 Tiempos",
+      "category": "social",
+      "pricePerPerson": 90,
+      "minGuests": 30,
+      "includesStaff": true,
+      "active": true
+    },
+    "cheapestPackage": {
+      "id": "cat-004",
+      "name": "Fiesta Infantil Gourmet",
+      "category": "infantil",
+      "pricePerPerson": 18.5,
+      "minGuests": 25,
+      "includesStaff": false,
+      "active": true
+    },
+    "categories": [
+      "empresarial",
+      "boda",
+      "infantil",
+      "social"
+    ]
+  },
+  "packages": [
+    {
+      "id": "cat-001",
+      "name": "Buffet Ejecutivo Premium",
+      "category": "empresarial",
+      "pricePerPerson": 35.5,
+      "minGuests": 20,
+      "includesStaff": true,
+      "active": true
+    },
+    {
+      "id": "cat-002",
+      "name": "Banquete Imperial de Boda",
+      "category": "boda",
+      "pricePerPerson": 75,
+      "minGuests": 50,
+      "includesStaff": true,
+      "active": true
+    },
+    {
+      "id": "cat-003",
+      "name": "Cóctel Empresarial & Bocadillos",
+      "category": "empresarial",
+      "pricePerPerson": 22,
+      "minGuests": 15,
+      "includesStaff": true,
+      "active": true
+    },
+    {
+      "id": "cat-004",
+      "name": "Fiesta Infantil Gourmet",
+      "category": "infantil",
+      "pricePerPerson": 18.5,
+      "minGuests": 25,
+      "includesStaff": false,
+      "active": true
+    },
+    {
+      "id": "cat-005",
+      "name": "Cena de Gala a 5 Tiempos",
+      "category": "social",
+      "pricePerPerson": 90,
+      "minGuests": 30,
+      "includesStaff": true,
+      "active": true
+    }
+  ]
+}

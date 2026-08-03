@@ -1,0 +1,20 @@
+{
+  "name": "semana-01-catering",
+  "version": "1.0.0",
+  "description": "Proyecto Semana 1 - Procesador CLI de Servicio de Catering",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc --noEmit",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["catering", "nodejs", "typescript", "cli"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

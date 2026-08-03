@@ -1,0 +1,47 @@
+[
+  {
+    "id": "cat-001",
+    "name": "Buffet Ejecutivo Premium",
+    "category": "empresarial",
+    "pricePerPerson": 35.50,
+    "minGuests": 20,
+    "includesStaff": true,
+    "active": true
+  },
+  {
+    "id": "cat-002",
+    "name": "Banquete Imperial de Boda",
+    "category": "boda",
+    "pricePerPerson": 75.00,
+    "minGuests": 50,
+    "includesStaff": true,
+    "active": true
+  },
+  {
+    "id": "cat-003",
+    "name": "Cóctel Empresarial & Bocadillos",
+    "category": "empresarial",
+    "pricePerPerson": 22.00,
+    "minGuests": 15,
+    "includesStaff": true,
+    "active": true
+  },
+  {
+    "id": "cat-004",
+    "name": "Fiesta Infantil Gourmet",
+    "category": "infantil",
+    "pricePerPerson": 18.50,
+    "minGuests": 25,
+    "includesStaff": false,
+    "active": true
+  },
+  {
+    "id": "cat-005",
+    "name": "Cena de Gala a 5 Tiempos",
+    "category": "social",
+    "pricePerPerson": 90.00,
+    "minGuests": 30,
+    "includesStaff": true,
+    "active": true
+  }
+]
