@@ -1,75 +1,96 @@
-#  Proyecto Semana 01 — Procesador de Servicio de Catering
+# 🍽️ Proyecto Bootcamp — Servicio de Catering (Express 5 + TypeScript)
 
-Este proyecto es una herramienta de línea de comandos (CLI) construida con **Node.js, TypeScript y async/await** para procesar y analizar paquetes de servicio de catering.
-
----
-
-##  Dominio Asignado: Servicio de Catering
-
-El sistema trabaja con banquetes y paquetes de catering con los siguientes atributos:
-- **`id`**: Identificador único del paquete (ej: `cat-001`).
-- **`name`**: Nombre del menú (ej: *Buffet Ejecutivo Premium*, *Banquete Imperial de Boda*).
-- **`category`**: Categoría del evento (*empresarial*, *boda*, *social*, *infantil*).
-- **`pricePerPerson`**: Precio en USD por cada invitado.
-- **`minGuests`**: Mínimo de invitados requeridos para la contratación.
-- **`includesStaff`**: Indica si el servicio incluye meseros y personal de atención.
-- **`active`**: Disponibilidad del paquete.
+Este repositorio contiene la entrega del bootcamp adaptada al dominio asignado: **Servicio de Catering**.
 
 ---
 
-##  Tecnologías Utilizadas
+## 📌 Dominio Asignado: Servicio de Catering
 
-- **Node.js 22+** (Modelo de I/O no bloqueante con `fs/promises`)
-- **TypeScript 5.8+** (Configuración estricta con `strict: true`)
-- **ES Modules (ESM)** (`import`/`export` nativo)
-- **tsx** (Ejecutor TypeScript en tiempo de desarrollo)
+Recurso principal: `CateringService`
 
----
-
-##  Cómo Ejecutar el Proyecto
-
-### 1. Instalar dependencias
-```bash
-pnpm install
-```
-
-### 2. Ejecutar en modo desarrollo
-```bash
-pnpm dev
-```
-
-### 3. Validar compilación de TypeScript (Rúbrica)
-```bash
-pnpm build
-```
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | `number` | Identificador único autoincremental |
+| `name` | `string` | Nombre del menú o banquete (ej. *Buffet Ejecutivo Premium*) |
+| `category` | `string` | Categoría (*Buffet*, *Coffee Break*, *Banquete*, *Postres*) |
+| `pricePerPerson` | `number` | Precio en USD por invitado |
+| `minPeople` | `number` | Mínimo de personas requeridas |
+| `isAvailable` | `boolean` | Disponibilidad del servicio |
 
 ---
 
-## 📁 Estructura del Código
+## 🚀 Semana 02 — Servidor Express con CRUD Completo
 
+### 🛠️ Tecnologías Utilizadas
+- **Express 5**
+- **TypeScript 5.8+** (Modo estricto `strict: true`)
+- **ES Modules (ESM)**
+- **tsx watch** (Hot reload en desarrollo)
+
+### 🗂️ Estructura del Proyecto
 ```text
 express/
-├── data/
-│   └── catering.json          # Archivo de datos de los paquetes de catering
-├── output/
-│   └── catering-report.json   # Reporte generado automáticamente
 ├── src/
-│   ├── types.ts               # Definición de tipos e interfaces del dominio
-│   ├── reader.ts              # Lectura de datos JSON con fs/promises
-│   ├── processor.ts           # Cálculo de estadísticas y promedios
-│   ├── writer.ts              # Escritura del reporte JSON en disco
-│   └── index.ts               # Punto de entrada principal
-├── package.json               # Configuración del proyecto y scripts
-└── tsconfig.json              # Configuración estricta de TypeScript
+│   ├── types.ts                        # Interfaz CateringService y DTOs
+│   ├── store.ts                        # Store en memoria (5 métodos CRUD)
+│   ├── routes/
+│   │   └── catering-services.routes.ts  # 5 Endpoints REST
+│   ├── app.ts                          # App Express + Middlewares + Handlers
+│   └── server.ts                       # Entrypoint + Graceful Shutdown (SIGINT/SIGTERM)
+├── GUIA_DE_ESTUDIO_SEMANA_02.md        # Guía mental paso a paso
+├── package.json
+└── tsconfig.json
 ```
 
 ---
 
-## 📊 Resultado del Reporte Generado
+## 📡 Endpoints de la API REST (`/api/v1/catering-services`)
 
-El reporte se guarda automáticamente en `output/catering-report.json` e incluye:
-- Total de paquetes analizados.
-- Paquetes activos e inactivos.
-- Precio promedio por persona.
-- Paquete más destacado (mayor precio) y paquete más económico.
-- Lista de categorías disponibles.
+| Método | Ruta | Descripción | HTTP Status |
+|--------|------|-------------|-------------|
+| **GET** | `/api/v1/catering-services` | Listar todos los servicios | `200 OK` |
+| **GET** | `/api/v1/catering-services/:id` | Obtener un servicio por ID | `200 OK` / `404 Not Found` |
+| **POST** | `/api/v1/catering-services` | Crear un nuevo servicio | `201 Created` / `400 Bad Request` |
+| **PUT** | `/api/v1/catering-services/:id` | Actualizar un servicio por ID | `200 OK` / `404 Not Found` |
+| **DELETE** | `/api/v1/catering-services/:id` | Eliminar un servicio por ID | `204 No Content` / `404 Not Found` |
+
+---
+
+## ⚙️ Middlewares Registrados (Orden Estricto)
+1. **`express.json()`** — Parsing del body en JSON.
+2. **Logger personalizado** — Registra fecha, Método HTTP, URL, Status Code y tiempo de respuesta en milisegundos.
+3. **Router de rutas** — Sub-rutas `/api/v1/catering-services`.
+4. **Handler 404** — Captura de rutas no registradas.
+5. **Global Error Handler** — Middleware de 4 parámetros `(err, req, res, next)` para captura de excepciones no controladas.
+
+---
+
+## 🧪 Cómo Ejecutar y Probar
+
+### 1. Iniciar el Servidor
+```bash
+npm run dev
+```
+
+### 2. Probar Endpoints con cURL
+
+```bash
+# Listar servicios
+curl http://localhost:3000/api/v1/catering-services
+
+# Obtener por ID
+curl http://localhost:3000/api/v1/catering-services/1
+
+# Crear nuevo servicio
+curl -X POST http://localhost:3000/api/v1/catering-services \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Buffet Criollo VIP","category":"Buffet","pricePerPerson":32.0,"minPeople":20,"isAvailable":true}'
+
+# Actualizar servicio por ID
+curl -X PUT http://localhost:3000/api/v1/catering-services/1 \
+  -H "Content-Type: application/json" \
+  -d '{"pricePerPerson":40.0}'
+
+# Eliminar servicio por ID
+curl -X DELETE http://localhost:3000/api/v1/catering-services/1
+```

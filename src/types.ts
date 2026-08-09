@@ -1,33 +1,56 @@
-// ===================================================
-// LO QUE NECESITO PARA MI NEGOCIO DE CATERING
-// ===================================================
+// ============================================================================
+// TIPOS E INTERFACES — RECURSO PRINCIPAL: SERVICIO DE CATERING (SEMANA 02)
+// ============================================================================
 
-// La plantilla con los datos de cada menú o paquete de catering
+/**
+ * Representa un servicio o banquete de catering disponible en la empresa.
+ */
+export interface CateringService {
+  id: number;                 // Identificador único numérico (1, 2, 3...)
+  name: string;               // Nombre del servicio (ej. "Buffet Ejecutivo Premium")
+  category: string;           // Categoría ("Buffet", "Coffee Break", "Banquete", "Postres")
+  pricePerPerson: number;     // Precio por persona (ej. 35.00 USD)
+  minPeople: number;          // Mínimo de personas para contratarlo (ej. 20)
+  isAvailable: boolean;       // Disponibilidad del servicio (true / false)
+}
+
+/**
+ * DTO (Data Transfer Object) para crear un nuevo servicio de catering.
+ */
+export type CreateCateringServiceDto = Omit<CateringService, 'id'>;
+
+/**
+ * DTO para actualizar un servicio de catering existente.
+ */
+export type UpdateCateringServiceDto = Partial<CreateCateringServiceDto>;
+
+// ============================================================================
+// COMPATIBILIDAD SEMANA 01 (PROCESADOR CLI Y MOCK DATA)
+// ============================================================================
+
 export interface CateringPackage {
-  id: string;             // Código del menú (ejemplo: "cat-001")
-  name: string;           // Nombre de la comida o banquete
-  category: 'empresarial' | 'boda' | 'social' | 'infantil' | string; // Tipo de evento
-  pricePerPerson: number; // Cuánto cuesta por cada invitado
-  minGuests: number;      // Mínimo de personas para contratarlo
-  includesStaff: boolean; // ¿Incluye meseros? (sí o no)
-  active: boolean;        // ¿Está disponible actualmente?
+  id: string;
+  name: string;
+  category: string;
+  pricePerPerson: number;
+  minGuests: number;
+  includesStaff: boolean;
+  active: boolean;
 }
 
-// Las cuentas y estadísticas que voy a calcular
 export interface CateringSummary {
-  totalPackages: number;                   // Cuántos banquetes hay en total
-  activePackages: number;                  // Cuántos están disponibles
-  inactivePackages: number;                // Cuántos no están disponibles
-  averagePricePerPerson: number;           // Precio promedio por persona
-  mostExpensivePackage: CateringPackage | null; // El paquete más caro
-  cheapestPackage: CateringPackage | null;      // El paquete más barato
-  categories: string[];                    // Todas las categorías que tengo
+  totalPackages: number;
+  activePackages: number;
+  inactivePackages: number;
+  averagePricePerPerson: number;
+  mostExpensivePackage: CateringPackage | null;
+  cheapestPackage: CateringPackage | null;
+  categories: string[];
 }
 
-// El reporte final que voy a guardar
 export interface Report {
-  generatedAt: string;         // Hora y fecha en que hice la cuenta
-  appliedFilter: string | null; // Si busque una categoría específica
-  summary: CateringSummary;    // El resumen con todos los totales
-  packages: CateringPackage[]; // Lista con los banquetes
+  generatedAt: string;
+  appliedFilter: string | null;
+  summary: CateringSummary;
+  packages: CateringPackage[];
 }

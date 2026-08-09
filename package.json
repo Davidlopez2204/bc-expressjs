@@ -1,20 +1,29 @@
 {
-  "name": "semana-01-catering",
+  "name": "semana-02-catering",
   "version": "1.0.0",
-  "description": "Proyecto Semana 1 - Procesador CLI de Servicio de Catering",
-  "main": "dist/index.js",
+  "description": "Proyecto Semana 2 - Servidor Express API REST para Servicio de Catering",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "build": "tsc --noEmit",
-    "start": "node dist/index.js"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
-  "keywords": ["catering", "nodejs", "typescript", "cli"],
+  "keywords": [
+    "catering",
+    "nodejs",
+    "typescript",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^22.15.21",
-    "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "@types/express": "5.0.6",
+    "@types/node": "22.15.21",
+    "tsx": "4.19.4",
+    "typescript": "5.8.3"
+  },
+  "dependencies": {
+    "express": "5.2.1"
   }
 }
