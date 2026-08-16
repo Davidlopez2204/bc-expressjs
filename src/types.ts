@@ -1,56 +1,45 @@
 // ============================================================================
-// TIPOS E INTERFACES — RECURSO PRINCIPAL: SERVICIO DE CATERING (SEMANA 02)
+// TIPOS — SERVICIO DE CATERING (SEMANA 03)
 // ============================================================================
 
-/**
- * Representa un servicio o banquete de catering disponible en la empresa.
- */
+// Lo que representa un servicio de catering en mi sistema
 export interface CateringService {
-  id: number;                 // Identificador único numérico (1, 2, 3...)
-  name: string;               // Nombre del servicio (ej. "Buffet Ejecutivo Premium")
-  category: string;           // Categoría ("Buffet", "Coffee Break", "Banquete", "Postres")
-  pricePerPerson: number;     // Precio por persona (ej. 35.00 USD)
-  minPeople: number;          // Mínimo de personas para contratarlo (ej. 20)
-  isAvailable: boolean;       // Disponibilidad del servicio (true / false)
-}
-
-/**
- * DTO (Data Transfer Object) para crear un nuevo servicio de catering.
- */
-export type CreateCateringServiceDto = Omit<CateringService, 'id'>;
-
-/**
- * DTO para actualizar un servicio de catering existente.
- */
-export type UpdateCateringServiceDto = Partial<CreateCateringServiceDto>;
-
-// ============================================================================
-// COMPATIBILIDAD SEMANA 01 (PROCESADOR CLI Y MOCK DATA)
-// ============================================================================
-
-export interface CateringPackage {
-  id: string;
+  id: number;
   name: string;
   category: string;
   pricePerPerson: number;
-  minGuests: number;
-  includesStaff: boolean;
-  active: boolean;
+  minPeople: number;
+  isAvailable: boolean;
+  createdAt: string;
 }
 
-export interface CateringSummary {
-  totalPackages: number;
-  activePackages: number;
-  inactivePackages: number;
-  averagePricePerPerson: number;
-  mostExpensivePackage: CateringPackage | null;
-  cheapestPackage: CateringPackage | null;
-  categories: string[];
+// Para crear un servicio nuevo (sin id ni fecha, esos los pone el servidor)
+export type CreateCateringServiceDto = Omit<CateringService, 'id' | 'createdAt'>;
+
+// Para actualizar un servicio (todos los campos son opcionales)
+export type UpdateCateringServiceDto = Partial<CreateCateringServiceDto>;
+
+// Respuesta cuando devuelvo UN solo elemento
+export interface SingleResponse<T> {
+  data: T;
 }
 
-export interface Report {
-  generatedAt: string;
-  appliedFilter: string | null;
-  summary: CateringSummary;
-  packages: CateringPackage[];
+// Respuesta cuando devuelvo una LISTA con paginación
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+// Respuesta cuando hay un error
+export interface ErrorResponse {
+  error: string;
+  message: string;
+}
+
+// Los parámetros de paginación que me llegan por query string
+export interface PaginationParams {
+  page: number;
+  limit: number;
 }

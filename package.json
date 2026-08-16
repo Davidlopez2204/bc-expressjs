@@ -1,7 +1,7 @@
 {
-  "name": "semana-02-catering",
+  "name": "semana-03-catering",
   "version": "1.0.0",
-  "description": "Proyecto Semana 2 - Servidor Express API REST para Servicio de Catering",
+  "description": "Proyecto Semana 3 - API REST con Arquitectura en Capas para Servicio de Catering",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
@@ -13,7 +13,8 @@
     "catering",
     "nodejs",
     "typescript",
-    "express"
+    "express",
+    "rest-api"
   ],
   "author": "",
   "license": "ISC",
