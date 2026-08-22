@@ -1,7 +1,7 @@
 {
-  "name": "semana-03-catering",
+  "name": "semana-04-catering",
   "version": "1.0.0",
-  "description": "Proyecto Semana 3 - API REST con Arquitectura en Capas para Servicio de Catering",
+  "description": "Proyecto Semana 4 - Validación con Zod y Manejo Centralizado de Errores para Servicio de Catering",
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
@@ -14,7 +14,10 @@
     "nodejs",
     "typescript",
     "express",
-    "rest-api"
+    "rest-api",
+    "zod",
+    "validation",
+    "error-handling"
   ],
   "author": "",
   "license": "ISC",
@@ -25,6 +28,7 @@
     "typescript": "5.8.3"
   },
   "dependencies": {
-    "express": "5.2.1"
+    "express": "5.2.1",
+    "zod": "3.24.2"
   }
 }

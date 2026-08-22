@@ -1,44 +1,90 @@
 // ============================================================================
-// SERVICE — Aquí va la lógica de mi negocio (sin nada de Express)
+// SERVICE — Lógica de Negocio (Semana 04)
 // ============================================================================
+// No sabe nada de Express (no usa req, res, next).
+// Cuando un recurso no existe, lanza un `NotFoundError` que el middleware de
+// errores se encarga de capturar y responder con 404.
 
-import { CateringService, CreateCateringServiceDto, UpdateCateringServiceDto, PaginatedResponse, PaginationParams } from '../types.js';
+import {
+  CateringService,
+  CreateCateringServiceDto,
+  UpdateCateringServiceDto,
+  PaginatedResponse,
+  PaginationParams,
+} from '../types.js';
 import * as repo from '../repositories/catering-services.repository.js';
+import { NotFoundError } from '../errors/app-error.js';
 
-// Traer todos los servicios con paginación
-export async function findAll(params: PaginationParams): Promise<PaginatedResponse<CateringService>> {
+// Listar servicios con paginación
+export async function findAll(
+  params: PaginationParams
+): Promise<PaginatedResponse<CateringService>> {
   const { page, limit } = params;
   const all = await repo.findAll();
 
-  // Calculo desde dónde cortar el array para la página que me piden
+  const total = all.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+
+  // Calculamos el índice inicial para recortar la lista
   const start = (page - 1) * limit;
   const data = all.slice(start, start + limit);
 
-  return { data, total: all.length, page, limit };
+  return {
+    data,
+    total,
+    page,
+    limit,
+    totalPages,
+  };
 }
 
-// Buscar un servicio por ID
-export async function findById(id: number): Promise<CateringService | undefined> {
-  return repo.findById(id);
+// Buscar un servicio por su ID (lanza NotFoundError si no existe)
+export async function findById(id: number): Promise<CateringService> {
+  const service = await repo.findById(id);
+
+  if (!service) {
+    throw new NotFoundError(`No se encontró el servicio de catering con ID ${id}`);
+  }
+
+  return service;
 }
 
-// Crear un servicio nuevo
+// Crear un nuevo servicio
 export async function create(dto: CreateCateringServiceDto): Promise<CateringService> {
   return repo.create(dto);
 }
 
-// Actualizar un servicio existente
-export async function update(id: number, dto: UpdateCateringServiceDto): Promise<CateringService | undefined> {
+// Actualizar un servicio existente (lanza NotFoundError si no existe)
+export async function update(
+  id: number,
+  dto: UpdateCateringServiceDto
+): Promise<CateringService> {
+  // Verificamos primero si existe
   const exists = await repo.findById(id);
-  if (!exists) return undefined;
+  if (!exists) {
+    throw new NotFoundError(
+      `No se encontró el servicio de catering con ID ${id} para actualizar`
+    );
+  }
 
-  return repo.update(id, dto);
+  const updated = await repo.update(id, dto);
+  if (!updated) {
+    throw new NotFoundError(
+      `No se pudo actualizar el servicio de catering con ID ${id}`
+    );
+  }
+
+  return updated;
 }
 
-// Eliminar un servicio
-export async function remove(id: number): Promise<boolean> {
+// Eliminar un servicio por ID (lanza NotFoundError si no existe)
+export async function remove(id: number): Promise<void> {
   const exists = await repo.findById(id);
-  if (!exists) return false;
+  if (!exists) {
+    throw new NotFoundError(
+      `No se encontró el servicio de catering con ID ${id} para eliminar`
+    );
+  }
 
-  return repo.remove(id);
+  await repo.remove(id);
 }

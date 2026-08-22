@@ -1,10 +1,15 @@
 // ============================================================================
-// REPOSITORY — Aquí guardo y busco los datos de catering (como si fuera la BD)
+// REPOSITORY — Acceso a datos en memoria (Simulación de Base de Datos)
 // ============================================================================
+// Es el ÚNICO lugar donde se lee y modifica el array `store`.
 
-import { CateringService, CreateCateringServiceDto, UpdateCateringServiceDto } from '../types.js';
+import {
+  CateringService,
+  CreateCateringServiceDto,
+  UpdateCateringServiceDto,
+} from '../types.js';
 
-// Mi "base de datos" en memoria con servicios de ejemplo
+// Base de datos en memoria con datos iniciales
 const store: CateringService[] = [
   {
     id: 1,
@@ -44,36 +49,48 @@ const store: CateringService[] = [
   },
 ];
 
-// Contador para que cada servicio nuevo tenga un ID diferente
+// Contador de autoincremento para IDs
 let nextId = 5;
 
-// Traer todos los servicios (devuelvo una copia para no modificar el original)
+// Obtener todos los servicios (copia defensiva)
 export async function findAll(): Promise<CateringService[]> {
   return [...store];
 }
 
-// Buscar un servicio por su ID
+// Buscar un servicio por ID
 export async function findById(id: number): Promise<CateringService | undefined> {
   return store.find((service) => service.id === id);
 }
 
-// Crear un servicio nuevo y guardarlo
+// Guardar un nuevo servicio
 export async function create(dto: CreateCateringServiceDto): Promise<CateringService> {
   const newService: CateringService = {
     id: nextId++,
-    ...dto,
+    name: dto.name,
+    category: dto.category,
+    pricePerPerson: dto.pricePerPerson,
+    minPeople: dto.minPeople,
+    isAvailable: dto.isAvailable ?? true,
     createdAt: new Date().toISOString(),
   };
+
   store.push(newService);
   return { ...newService };
 }
 
-// Actualizar un servicio que ya existe
-export async function update(id: number, dto: UpdateCateringServiceDto): Promise<CateringService | undefined> {
+// Actualizar un servicio existente
+export async function update(
+  id: number,
+  dto: UpdateCateringServiceDto
+): Promise<CateringService | undefined> {
   const index = store.findIndex((service) => service.id === id);
   if (index === -1) return undefined;
 
-  store[index] = { ...store[index], ...dto };
+  store[index] = {
+    ...store[index],
+    ...dto,
+  };
+
   return { ...store[index] };
 }
 
