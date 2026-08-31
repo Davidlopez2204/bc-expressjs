@@ -1,13 +1,16 @@
 {
-  "name": "semana-04-catering",
-  "version": "1.0.0",
-  "description": "Proyecto Semana 4 - Validación con Zod y Manejo Centralizado de Errores para Servicio de Catering",
+  "name": "semana-05-catering",
+  "version": "5.0.0",
+  "description": "Proyecto Semana 05 — API con PostgreSQL y Prisma ORM para Servicio de Catering",
   "main": "dist/server.js",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [
     "catering",
@@ -16,19 +19,22 @@
     "express",
     "rest-api",
     "zod",
-    "validation",
-    "error-handling"
+    "prisma",
+    "postgresql"
   ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "5.0.6",
     "@types/node": "22.15.21",
+    "prisma": "6.8.2",
     "tsx": "4.19.4",
     "typescript": "5.8.3"
   },
   "dependencies": {
+    "@prisma/client": "6.8.2",
     "express": "5.2.1",
+    "winston": "3.17.0",
     "zod": "3.24.2"
   }
 }

@@ -1,2 +1,2 @@
-// Módulo no utilizado para la entrega de la Semana 04
+// Módulo no utilizado para la entrega de la Semana 05
 export {};

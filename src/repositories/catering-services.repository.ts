@@ -1,104 +1,71 @@
-// ============================================================================
-// REPOSITORY — Acceso a datos en memoria (Simulación de Base de Datos)
-// ============================================================================
-// Es el ÚNICO lugar donde se lee y modifica el array `store`.
+// src/repositories/catering-services.repository.ts — Acceso a datos con Prisma
 
-import {
-  CateringService,
-  CreateCateringServiceDto,
-  UpdateCateringServiceDto,
-} from '../types.js';
+import { prisma } from '../lib/prisma';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { AppError } from '../errors/AppError';
+import { CreateCateringDto, UpdateCateringDto } from '../schemas/catering-services.schema';
 
-// Base de datos en memoria con datos iniciales
-const store: CateringService[] = [
-  {
-    id: 1,
-    name: 'Buffet Ejecutivo Premium',
-    category: 'Buffet',
-    pricePerPerson: 35.0,
-    minPeople: 20,
-    isAvailable: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    name: 'Coffee Break Empresarial',
-    category: 'Coffee Break',
-    pricePerPerson: 15.5,
-    minPeople: 15,
-    isAvailable: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    name: 'Banquete de Gala y Bodas',
-    category: 'Banquete',
-    pricePerPerson: 65.0,
-    minPeople: 50,
-    isAvailable: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    name: 'Estación de Postres y Repostería',
-    category: 'Postres',
-    pricePerPerson: 18.0,
-    minPeople: 25,
-    isAvailable: false,
-    createdAt: new Date().toISOString(),
-  },
-];
+// Listar con paginación e incluir menuItems
+export async function findAll(page: number, limit: number) {
+  const skip = (page - 1) * limit;
 
-// Contador de autoincremento para IDs
-let nextId = 5;
+  const data = await prisma.cateringService.findMany({
+    skip,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+    include: { menuItems: true },
+  });
 
-// Obtener todos los servicios (copia defensiva)
-export async function findAll(): Promise<CateringService[]> {
-  return [...store];
+  const total = await prisma.cateringService.count();
+
+  return { data, total, page, limit };
 }
 
-// Buscar un servicio por ID
-export async function findById(id: number): Promise<CateringService | undefined> {
-  return store.find((service) => service.id === id);
+// Buscar por ID (incluye menuItems)
+export async function findById(id: string) {
+  return prisma.cateringService.findUnique({
+    where: { id },
+    include: { menuItems: true },
+  });
 }
 
-// Guardar un nuevo servicio
-export async function create(dto: CreateCateringServiceDto): Promise<CateringService> {
-  const newService: CateringService = {
-    id: nextId++,
-    name: dto.name,
-    category: dto.category,
-    pricePerPerson: dto.pricePerPerson,
-    minPeople: dto.minPeople,
-    isAvailable: dto.isAvailable ?? true,
-    createdAt: new Date().toISOString(),
-  };
-
-  store.push(newService);
-  return { ...newService };
+// Crear un nuevo servicio (captura P2002)
+export async function create(data: CreateCateringDto) {
+  try {
+    return await prisma.cateringService.create({ data });
+  } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
+      throw new AppError(409, `Ya existe un servicio de catering con el nombre '${data.name}'`);
+    }
+    throw err;
+  }
 }
 
-// Actualizar un servicio existente
-export async function update(
-  id: number,
-  dto: UpdateCateringServiceDto
-): Promise<CateringService | undefined> {
-  const index = store.findIndex((service) => service.id === id);
-  if (index === -1) return undefined;
-
-  store[index] = {
-    ...store[index],
-    ...dto,
-  };
-
-  return { ...store[index] };
+// Actualizar un servicio (captura P2025 y P2002)
+export async function update(id: string, data: UpdateCateringDto) {
+  try {
+    return await prisma.cateringService.update({ where: { id }, data });
+  } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError) {
+      if (err.code === 'P2025') {
+        throw new AppError(404, `Servicio de catering con ID ${id} no encontrado`);
+      }
+      if (err.code === 'P2002') {
+        throw new AppError(409, 'Ya existe un servicio de catering con ese nombre');
+      }
+    }
+    throw err;
+  }
 }
 
-// Eliminar un servicio por su ID
-export async function remove(id: number): Promise<boolean> {
-  const index = store.findIndex((service) => service.id === id);
-  if (index === -1) return false;
-
-  store.splice(index, 1);
-  return true;
+// Eliminar un servicio (captura P2025)
+export async function remove(id: string) {
+  try {
+    await prisma.cateringService.delete({ where: { id } });
+  } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError && err.code === 'P2025') {
+      throw new AppError(404, `Servicio de catering con ID ${id} no encontrado`);
+    }
+    throw err;
+  }
 }

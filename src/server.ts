@@ -1,32 +1,27 @@
-// ============================================================================
-// SERVER — Punto de entrada, arranca el servidor
-// ============================================================================
+// src/server.ts — Entry point del servidor
 
-import { app } from './app.js';
+import { app } from './app';
+import { logger } from './config/logger';
+import { prisma } from './lib/prisma';
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env['PORT']) || 3000;
 
 const server = app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📍 API: http://localhost:${PORT}/api/v1/catering-services`);
-  console.log(`====================================================`);
+  logger.info(`🚀 Server running on http://localhost:${PORT}`);
+  logger.info(`📍 API: http://localhost:${PORT}/api/v1/catering-services`);
+  logger.info(`📘 Environment: ${process.env['NODE_ENV'] ?? 'development'}`);
 });
 
-// Cierre limpio del servidor
-const gracefulShutdown = (signal: string) => {
-  console.log(`\n🛑 Señal ${signal} recibida. Cerrando servidor...`);
-
-  server.close(() => {
-    console.log('✅ Servidor cerrado correctamente.');
+process.on('SIGTERM', () => {
+  server.close(async () => {
+    await prisma.$disconnect();
     process.exit(0);
   });
+});
 
-  setTimeout(() => {
-    console.error('⚠️ Forzando cierre después de 10 segundos.');
-    process.exit(1);
-  }, 10000);
-};
-
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => {
+  server.close(async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+  });
+});

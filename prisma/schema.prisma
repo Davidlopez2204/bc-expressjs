@@ -1,0 +1,43 @@
+// Prisma Schema — Proyecto Semana 05
+// Dominio: Servicio de Catering (CateringService)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Recurso principal: Servicio de Catering
+model CateringService {
+  id             String     @id @default(uuid()) @db.Uuid
+  name           String     @unique
+  category       String
+  pricePerPerson Float
+  minPeople      Int
+  isAvailable    Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // Relación 1:N — Un servicio tiene muchos ítems de menú
+  menuItems MenuItem[]
+
+  @@map("catering_services")
+}
+
+// Recurso secundario: Ítems del Menú (relación 1:N con CateringService)
+model MenuItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // FK hacia CateringService (UUID)
+  cateringServiceId String          @db.Uuid
+  cateringService   CateringService @relation(fields: [cateringServiceId], references: [id], onDelete: Cascade)
+
+  @@map("menu_items")
+}
